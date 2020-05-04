@@ -63,11 +63,11 @@ export default {
         //   this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`)
         // }
       // 对象方式
-        this.$router.push({
-          name:"search",
-          params: { keyword: keyword ==="" ? undefined : keyword },
-          query: { keyword2: keyword.toUpperCase() }
-        })
+        // this.$router.push({
+        //   name:"search",
+        //   params: { keyword: keyword ==="" ? undefined : keyword },
+        //   query: { keyword2: keyword.toUpperCase() }
+        // })
 
         /*
         但是连续点击的时候会报错   从vue-router3.1.0之后 引入了push()的promise的语法  
@@ -123,11 +123,11 @@ export default {
       /*
           const keyword = this.keyword
           */
-        //   this.$router.push({ // push是重写后的方法
-        //   name: 'search', 
-        //   params: { keyword: keyword==='' ? undefined : keyword },
-        //   query: { keyword2: keyword.toUpperCase() }
-        // }).then(() => {console.log('跳转成功的回调执行')})
+          this.$router.push({ // push是重写后的方法
+          name: 'search', 
+          params: { keyword: keyword==='' ? undefined : keyword },
+          query: { keyword2: keyword.toUpperCase() }
+        }).then(() => {console.log('跳转成功的回调执行')})
       
     }
   }
