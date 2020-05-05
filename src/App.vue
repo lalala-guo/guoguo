@@ -9,8 +9,21 @@
 <script>
 import Header from "./components/Header/Header.vue";
 import Footer from "./components/Footer/Footer.vue";
+// 引入 暴露的函数
+import {reqBaseCategoryList, reqLogin} from "@/api"
+
 export default {
     name:"App",
+
+  // 发送请求  mounted  created
+  // 用async函数  
+    async created(){
+      const result1 = await reqBaseCategoryList()
+      const result2 = await reqLogin("13700000000", 111111)
+    },
+
+
+
     components:{
       Header,
       Footer
