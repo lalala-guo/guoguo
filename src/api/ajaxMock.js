@@ -9,7 +9,7 @@ NProgress.configure({ showSpinner: false }) 
 // 创建一个新的axios的实例 instance  是一个函数  和axios的功能相似  可以作为函数和对象发送请求
 const instance = Axios.create({
     // 基础url配置
-    baseURL: '/api',
+    baseURL: '/mock',
     // 处理请求的超时时间
     timeout:5000,
 })

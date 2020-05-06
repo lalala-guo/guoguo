@@ -54,7 +54,7 @@ export default {
         // this.$router.push(`/search/${this.keyword}`)  //params 字符串传参方式
         // // query  字符串传参方式
         // this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`)
-        const keyword = this.keyword
+        // const keyword = this.keyword
     //  如果是空串  要判断  
       //  字符串 方式
         // if(keyword === ""){
@@ -123,11 +123,21 @@ export default {
       /*
           const keyword = this.keyword
           */
-          this.$router.push({ // push是重写后的方法
-          name: 'search', 
-          params: { keyword: keyword==='' ? undefined : keyword },
-          query: { keyword2: keyword.toUpperCase() }
-        }).then(() => {console.log('跳转成功的回调执行')})
+
+            const keyword = this.keyword
+            const location = { // push是重写后的方法
+                name: 'search', 
+                params: { keyword: keyword==='' ? undefined : keyword },
+            }
+            // 对象的解构赋值
+            if(keyword){
+                location.params = {keyword}
+            }
+            const { query } = this.$route
+
+            location.query = query
+
+            this.$router.push(location)
       
     }
   }

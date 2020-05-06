@@ -1,6 +1,7 @@
 // 请求文件
 // 引入封装好的ajax文件
 import ajax from "./ajax.js"
+import ajaxMock from "./ajaxMock"
 
 // 请求获取3级分类列表  /api/product/getBaseCategoryList
  export function reqBaseCategoryList(){
@@ -23,3 +24,6 @@ export function reqLogin(mobile,password){
     // 可用对象形式  
     // return ajax.post('/user/passport/login', {mobile,password})
 }
+
+export const reqBanners = () => ajaxMock("/banners")
+export const reqFloors = () => ajaxMock("/floors")
