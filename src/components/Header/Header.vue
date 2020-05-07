@@ -125,9 +125,9 @@ export default {
           */
 
             const keyword = this.keyword
-            const location = { // push是重写后的方法
+            const location = { 
                 name: 'search', 
-                params: { keyword: keyword==='' ? undefined : keyword },
+                // params: { keyword: keyword==='' ? undefined : keyword },
             }
             // 对象的解构赋值
             if(keyword){
