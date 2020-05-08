@@ -3,10 +3,15 @@ import App from "./App.vue";
 import router from "./router/index.js";
 // 使用mockServer
 import "./mock/mockServer.js"
+import "swiper/css/swiper.min.css"
 
 // 全局引入
 import TypeNav from "./components/TypeNav/TypeNav.vue";
-Vue.component("TypeNav",TypeNav)
+import Carousel from "./components/Carousel/Carousel.vue";
+
+Vue.component("TypeNav",TypeNav);
+Vue.component("Carousel",Carousel);
+
 import store from "@/store/index.js"
 // Vue.config.productionTip = false // 去掉不是生产环境的提示
 

@@ -1,5 +1,6 @@
 /* 
 用来管理首页数据的vuex模块
+引入3级分类列表函数数据
 */
 import {reqBaseCategoryList, reqBanners, reqFloors} from '@/api'
 
@@ -74,5 +75,5 @@ export default  {
     },
     
   },
-//   getters: {},
+  // getters: {},
 }

@@ -17,28 +17,11 @@
                             <div class="blockgary">
                                 <ul class="jd-list">
                                     <li v-for="(index, keyword) in floor.keywords" :key="index">节能补贴{{keyword[index]}}</li>
-                                    <!-- <li>4K电视</li>
-                                    <li>空气净化器</li>
-                                    <li>IH电饭煲</li>
-                                    <li>滚筒洗衣机</li>
-                                    <li>电热水器</li> -->
                                 </ul>
                                 <img :src="floor.imgUrl" />
                             </div>
                             <div class="floorBanner">
-                                <div class="swiper-container" id="floor1Swiper">
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide" v-for="item in floor.carouselList" :key="item.id">
-                                            <img :src="item.imgUrl">
-                                        </div>
-                                    </div>
-                                    <!-- 如果需要分页器 -->
-                                    <div class="swiper-pagination"></div>
-
-                                    <!-- 如果需要导航按钮 -->
-                                    <div class="swiper-button-prev"></div>
-                                    <div class="swiper-button-next"></div>
-                                </div>
+                                <Carousel :carouselList="floor.carouselList"/>
                             </div>
                             <div class="split">
                                 <span class="floor-x-line"></span>
@@ -69,12 +52,64 @@
 </template>
 
 <script>
+import Swiper from "swiper"
+import "swiper/css/swiper.min.css"
 export default {
     name:"Floor",
     props:{
         floor:Object
     },
-    
+
+
+    //  mounted(){
+    //      new Swiper ("#swiper",{
+    //         // new Swiper (this.$refs.swiper, {
+    //             // direction: 'horizontal', // 水平切换, 默认就是这个值
+                
+    //             loop: true, // 循环模式选项
+                
+    //             // 如果需要分页器
+    //             pagination: {
+    //                 el: '.swiper-pagination',
+    //             },
+                
+    //             // 如果需要前进后退按钮
+    //             navigation: {
+    //                 nextEl: '.swiper-button-next',
+    //                 prevEl: '.swiper-button-prev',
+    //             },
+    //         })  
+    //  }
+
+    // watch:{
+    //     floor(){
+    //         this.$nextTick(() => {
+    //             this.initSwiper()
+    //         })
+    //     }
+    // },
+    // methods:{
+    //     initSwiper(){
+    //         // new Swiper (".swiper-container",{
+    //         new Swiper (this.$refs.swiper, {
+    //             // direction: 'horizontal', // 水平切换, 默认就是这个值
+                
+    //             loop: true, // 循环模式选项
+                
+    //             // 如果需要分页器
+    //             pagination: {
+    //                 el: '.swiper-pagination',
+    //             },
+                
+    //             // 如果需要前进后退按钮
+    //             navigation: {
+    //                 nextEl: '.swiper-button-next',
+    //                 prevEl: '.swiper-button-prev',
+    //             },
+    //         })  
+    //     }
+    // }
+
 }
 </script>
 
