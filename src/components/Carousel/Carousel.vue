@@ -37,22 +37,22 @@ import Swiper from "swiper"
         methods: {
             initSwiper() {
                 // new Swiper (".swiper-container",{
-                new Swiper(this.$refs.swiper, {
-                    // direction: 'horizontal', // 水平切换, 默认就是这个值
+                    new Swiper(this.$refs.swiper, {
+                        // direction: 'horizontal', // 水平切换, 默认就是这个值
 
-                    loop: true, // 循环模式选项
+                        loop: true, // 循环模式选项
 
-                    // 如果需要分页器
-                    pagination: {
-                        el: '.swiper-pagination',
-                    },
+                        // 如果需要分页器
+                        pagination: {
+                            el: '.swiper-pagination',
+                        },
 
-                    // 如果需要前进后退按钮
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                })
+                        // 如果需要前进后退按钮
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                    })
             }
         }
     }
