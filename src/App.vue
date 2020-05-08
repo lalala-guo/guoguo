@@ -13,7 +13,7 @@ import Footer from "./components/Footer/Footer.vue";
 import {reqBaseCategoryList, reqLogin} from "@/api"
 
 // 引入 ajaxMock文件
-import {reqFloors} from "@/api"
+// import {reqFloors} from "@/api"
 
 export default {
     name:"App",
@@ -23,8 +23,13 @@ export default {
     async created(){
       // const result1 = await reqBaseCategoryList()
       // const result2 = await reqLogin("13700000000", 111111)
-      const result = await reqFloors()
-      console.log("mockresult", result)
+      // const result = await reqFloors()
+      // console.log("mockresult", result)
+
+    this.$store.dispatch('getFloors')
+    this.$store.dispatch('getBanners')
+
+
 
       // 通过异步actions获取异步数据到vuex的state中
       this.$store.dispatch('getBaseCategoryList')
