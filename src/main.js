@@ -16,6 +16,9 @@ import store from "@/store/index.js"
 // Vue.config.productionTip = false // 去掉不是生产环境的提示
 
 new Vue({
+    beforeCreate(){
+        Vue.prototype.$globalEventBus = this
+    },
     render: h => h(App),
     router,
     store,

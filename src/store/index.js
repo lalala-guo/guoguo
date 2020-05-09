@@ -6,7 +6,7 @@ import Vuex from "vuex";
 // 引入子文件
 import home from "./modules/home.js";
 import user from "./modules/user.js"
-
+import search from "./modules/search.js"
 // 使用
 Vue.use(Vuex)
 
@@ -27,7 +27,8 @@ const store = new Vuex.Store({
     // getters,
     modules:{
         home,
-        user
+        user,
+        search
     }
 })
 

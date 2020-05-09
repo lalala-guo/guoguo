@@ -156,9 +156,19 @@
                 //判断keyword是否有值 如果有值 就将值赋给location对象的params参数
                 if(keyword){
                     location.params = { keyword }
-                } 
+                }
+                // 跳转search
+                // 判断当前是不是在search界面  是就replace  不是就push
+                // if(this.$route.path.indexOf("/search") === 0){
+                if(this.$route.name === "/search"){
+                    this.$router.replace(location)
+                }else{
+                    this.$router.push(location)
+                }
                 
-                this.$router.push(location)
+                // 隐藏一级列表
+                this.hideCategoryList()
+
             },
 
             // 显示 分类列表
