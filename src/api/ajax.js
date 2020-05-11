@@ -38,7 +38,7 @@ instance.interceptors.response.use(
         // 隐藏进度条
         NProgress.done()
         // 也可对错误进行处理
-        alert(`请求失败:${error.message||'未知错误'}`)
+        alert(`请求失败:${error.message ||'未知错误'}`)
         // 返回失败的promise    不能直接返回error  因为直接返回error的话返回的是一个成功的promise
         return Promise.reject(error)   //  也可以throw error  抛出错误
     }

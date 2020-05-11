@@ -1,36 +1,32 @@
-// vuex的主文件
-// 引入vue   vuex   安装使用vuex
-import Vue from "vue";
-import Vuex from "vuex";
+/* 
+vuex最核心的管理对象: store
+*/
+import Vue from 'vue'
+import Vuex from 'vuex'
+import modules from './modules'
 
-// 引入子文件
-import home from "./modules/home.js";
-import user from "./modules/user.js"
-import search from "./modules/search.js"
-// 使用
+// 声明使用vuex的插件
 Vue.use(Vuex)
 
-// const actions = {
+const mutations = {
+  test2 (state) { // 总state
 
-// }
-// const mutations = {
+  }
+}
 
-// }
-// const actions = {
-    
-// }
+const actions = {
 
-const store = new Vuex.Store({
-    // state,   
-    // mutations,
-    // actions,
-    // getters,
-    modules:{
-        home,
-        user,
-        search
-    }
+}
+
+const getters = {
+
+}
+
+// 向外暴露store对象
+export default new Vuex.Store({
+  mutations,
+  actions,
+  getters,
+  modules
 })
 
-// 暴露出去
-export default store
