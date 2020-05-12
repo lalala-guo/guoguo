@@ -66,16 +66,16 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <!-- <dl v-for="item in spuSaleAttrList" :key="item.id">
+              <dl v-for="item in spuSaleAttrList" :key="item.id">
                 <dt class="title">{{item.saleAttrName}}</dt>
-                <dd changepirce="0" :class="{active: spuIndex===index, }" 
-                  v-for="(spu, index) in item.spuSaleAttrValueList" 
-                  :key="spu.id"
-                  @click="spuChange(index)"
-                  >{{spu.saleAttrValueName}}</dd>
-              </dl> -->
+                <dd changepirce="0" :class="{active: value.isChecked === '1' }" 
+                  v-for="value in item.spuSaleAttrValueList" 
+                  :key="value.id"
+                  @click="spuChange(value, item.spuSaleAttrValueList )"
+                  >{{value.saleAttrValueName}}</dd>
+              </dl>
 
-              <dl v-if="spuSaleAttrList.length>0">
+              <!-- <dl v-if="spuSaleAttrList.length>0">
                 <dt class="title">{{spuSaleAttrList[0].saleAttrName}}</dt>
                 <dd changepirce="0" :class="{active: spuIndex1===index}"
                   v-for="(spu, index) in spuSaleAttrList[0].spuSaleAttrValueList" 
@@ -100,7 +100,7 @@
                   :key="spu.id"
                   @click="spuChange(index, 3)"
                 >{{spu.saleAttrValueName}}</dd>
-              </dl>
+              </dl> -->
 
               <!-- <dl>
                 <dt class="title">购买方式</dt>
@@ -111,12 +111,12 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt">
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model="skuNum">
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum>1?skuNum--:skuNum">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" @click="addToCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -376,10 +376,13 @@
     data(){
       return{
         currentIndex: 0,
+        // isChecked: 1,
+        // skuId:"", 
+        skuNum: 1
         // spuIndex: 0,
-        spuIndex1: 0,
-        spuIndex2: 1,
-        spuIndex3: 0,
+        // spuIndex1: 0,
+        // spuIndex2: 1,
+        // spuIndex3: 0,
       }
     },
     // 读取
@@ -399,22 +402,57 @@
         this.currentIndex = index
       },
 
-      // spuChange(index){
-      //   // console.log(id, index)
-      //     this.spuIndex  = index
-      //   // this.spuIndex = index
-      // },
-
-      spuChange(index, id){
-        if(id === 1){
-          this.spuIndex1 = index
-        }else if(id === 2){
-          this.spuIndex2 = index
-        }else if(id === 3){
-          this.spuIndex3 = index
+      spuChange(value, valueList){
+        // 判断当前点击的是否是同一个,即是否被选中
+        if(value.isChecked !== '1'){
+          // 如果当前点击的不是被选中的状态,就将所有的都置为不选中,将点击的那个置为选中
+          valueList.forEach(v => v.isChecked = "0")
+          value.isChecked = "1"
         }
-        
       },
+      // 添加至购物车
+       async addToCart(){
+        // 获取skuId  skuNum
+        const skuId = this.$route.params.skuId
+        const skuNum = this.skuNum
+
+        // // 1.   直接分发异步action   但是此时在分发之前就执行当前组件   要通过callback回调函数来操作
+        // this.$store.dispatch("addToCart",{skuId, skuNum, callback: this.callback})
+
+        // 2.通过async await函数返回的promise操作     
+        // 利用dispatch()的promise返回值  此返回值就是async函数返回的promise
+          // const errorMsg = await this.$store.dispatch("addToCart",{skuId, skuNum})
+          // if(errorMsg){  // 有值则失败
+          //   alert(errorMsg)
+          // }else{
+          //   alert("添加成功")
+          // }
+        // 通过try catch 捕获错误
+        try{
+           await this.$store.dispatch("addToCart",{skuId, skuNum})
+           alert("添加成功")
+        }catch(error){
+          alert(error.message)
+        }
+      },
+      
+      callback(errorMsg){
+        if(errorMsg){ // 有值则失败
+          alert(errorMsg)
+        }else{
+          alert("添加成功")
+        }
+      }
+
+      // spuChange(index, id){
+      //   if(id === 1){
+      //     this.spuIndex1 = index
+      //   }else if(id === 2){
+      //     this.spuIndex2 = index
+      //   }else if(id === 3){
+      //     this.spuIndex3 = index
+      //   }
+      // },
 
     },
     components: {

@@ -48,3 +48,6 @@ export const reqProductList = (searchParams) => ajax({
 
 //  GET请求  地址:/api/item/{ skuId }
 export const reqProduct = (skuId) => ajax(`/item/${skuId}`)  //skuId 要和routes里面的占位符一样
+
+// 购物车  post请求   /api/cart/addToCart/{ skuID }/{ skuNum }
+export const reqAddToCart = (skuId, skuNum) => ajax.post(`/cart/addToCart/${skuId}/${skuNum}`)
