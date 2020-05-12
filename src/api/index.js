@@ -44,3 +44,7 @@ export const reqProductList = (searchParams) => ajax({
 //   "props": ["1:1700-2799:价格", "2:6.65-6.74英寸:屏幕尺寸"],
 //   "trademark": "4:小米"
 // })
+
+
+//  GET请求  地址:/api/item/{ skuId }
+export const reqProduct = (skuId) => ajax(`/item/${skuId}`)  //skuId 要和routes里面的占位符一样

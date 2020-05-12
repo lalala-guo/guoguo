@@ -7,31 +7,33 @@
     <section class="con">
       <!-- 导航路径区域 -->
       <div class="conPoin">
-        <span>手机、数码、通讯</span>
-        <span>手机</span>
-        <span>Apple苹果</span>
-        <span>iphone 6S系类</span>
+        <span>{{categoryView.category1Name}}</span>
+        <span>{{categoryView.category2Name}}</span>
+        <span>{{categoryView.category3Name}}</span>
       </div>
       <!-- 主要内容区域 -->
       <div class="mainCon">
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom />
+          <Zoom v-if="skuImageList.length>0"
+            :bigUrl="skuImageList[currentIndex].imgUrl"
+            :imgUrl="skuImageList[currentIndex].imgUrl"  
+          />
           <!-- 小图列表 -->
-          <ImageList />
+          <ImageList @currentChange="handleCurrentChange"/>
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
           <div class="goodsDetail">
-            <h3 class="InfoName">Apple iPhone 6s（A1700）64G玫瑰金色 移动通信电信4G手机</h3>
-            <p class="news">推荐选择下方[移动优惠购],手机套餐齐搞定,不用换号,每月还有花费返</p>
+            <h3 class="InfoName">{{skuInfo.skuName}}</h3>
+            <p class="news">{{skuInfo.skuDesc}}</p>
             <div class="priceArea">
               <div class="priceArea1">
                 <div class="title">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</div>
                 <div class="price">
                   <i>¥</i>
-                  <em>5299</em>
+                  <em>{{skuInfo.price}}</em>
                   <span>降价通知</span>
                 </div>
                 <div class="remark">
@@ -64,30 +66,48 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <dl>
-                <dt class="title">选择颜色</dt>
-                <dd changepirce="0" class="active">金色</dd>
-                <dd changepirce="40">银色</dd>
-                <dd changepirce="90">黑色</dd>
+              <!-- <dl v-for="item in spuSaleAttrList" :key="item.id">
+                <dt class="title">{{item.saleAttrName}}</dt>
+                <dd changepirce="0" :class="{active: spuIndex===index, }" 
+                  v-for="(spu, index) in item.spuSaleAttrValueList" 
+                  :key="spu.id"
+                  @click="spuChange(index)"
+                  >{{spu.saleAttrValueName}}</dd>
+              </dl> -->
+
+              <dl v-if="spuSaleAttrList.length>0">
+                <dt class="title">{{spuSaleAttrList[0].saleAttrName}}</dt>
+                <dd changepirce="0" :class="{active: spuIndex1===index}"
+                  v-for="(spu, index) in spuSaleAttrList[0].spuSaleAttrValueList" 
+                  :key="spu.id"
+                  @click="spuChange(index, 1)"
+                >{{spu.saleAttrValueName}}</dd>
               </dl>
-              <dl>
-                <dt class="title">内存容量</dt>
-                <dd changepirce="0" class="active">16G</dd>
-                <dd changepirce="300">64G</dd>
-                <dd changepirce="900">128G</dd>
-                <dd changepirce="1300">256G</dd>
+
+                <dl v-if="spuSaleAttrList.length>0">
+                <dt class="title" >{{spuSaleAttrList[1].saleAttrName}}</dt>
+                <dd changepirce="0" :class="{active: spuIndex2===index}"
+                  v-for="(spu, index) in spuSaleAttrList[1].spuSaleAttrValueList" 
+                  :key="spu.id"
+                  @click="spuChange(index, 2)"
+                >{{spu.saleAttrValueName}}</dd>
               </dl>
-              <dl>
-                <dt class="title">选择版本</dt>
-                <dd changepirce="0" class="active">公开版</dd>
-                <dd changepirce="-1000">移动版</dd>
+
+              <dl v-if="spuSaleAttrList.length>0">
+                <dt class="title" >{{spuSaleAttrList[2].saleAttrName}}</dt>
+                <dd changepirce="0" :class="{active: spuIndex3===index}"
+                  v-for="(spu, index) in spuSaleAttrList[2].spuSaleAttrValueList" 
+                  :key="spu.id"
+                  @click="spuChange(index, 3)"
+                >{{spu.saleAttrValueName}}</dd>
               </dl>
-              <dl>
+
+              <!-- <dl>
                 <dt class="title">购买方式</dt>
                 <dd changepirce="0" class="active">官方标配</dd>
                 <dd changepirce="-240">优惠移动版</dd>
                 <dd changepirce="-390">电信优惠版</dd>
-              </dl>
+              </dl> -->
             </div>
             <div class="cartWrap">
               <div class="controls">
@@ -347,12 +367,56 @@
 </template>
 
 <script>
+  import { mapState, mapGetters } from "vuex"
   import ImageList from './ImageList/ImageList'
   import Zoom from './Zoom/Zoom'
-
+  
   export default {
     name: 'Detail',
-    
+    data(){
+      return{
+        currentIndex: 0,
+        // spuIndex: 0,
+        spuIndex1: 0,
+        spuIndex2: 1,
+        spuIndex3: 0,
+      }
+    },
+    // 读取
+    computed:{
+      ...mapState({
+        detail: state => state.detail.detailInfo
+      }),
+      ...mapGetters(["categoryView", "skuInfo", "skuImageList", "spuSaleAttrList"])
+    },
+    // 通过mounted 分发
+    mounted(){
+      // skuId    params参数
+      this.$store.dispatch("getProductInfo", this.$route.params.skuId)
+    },
+    methods:{
+      handleCurrentChange(index){
+        this.currentIndex = index
+      },
+
+      // spuChange(index){
+      //   // console.log(id, index)
+      //     this.spuIndex  = index
+      //   // this.spuIndex = index
+      // },
+
+      spuChange(index, id){
+        if(id === 1){
+          this.spuIndex1 = index
+        }else if(id === 2){
+          this.spuIndex2 = index
+        }else if(id === 3){
+          this.spuIndex3 = index
+        }
+        
+      },
+
+    },
     components: {
       ImageList,
       Zoom

@@ -1,39 +1,80 @@
 <template>
   <div class="spec-preview">
-    <img src="../images/s1.png" />
-    <div class="mask"></div>
+    <img :src="imgUrl" />
+    <div class="event" @mousemove="move"></div>
     <div class="big">
-      <img src="../images/s1.png" />
+      <img :src="bigUrl" ref="big" />
     </div>
-    <div class="small"></div>
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
 <script>
   export default {
     name: "Zoom",
+    props:{
+      bigUrl:String,
+      imgUrl:String
+    },
+    methods:{
+      move(event){
+        // 初始化left top 
+        let left = 0
+        let top = 0
+        // 取出相关的数据 
+        const {offsetX, offsetY} = event  
+        // 鼠标箭头距事件div的距离   鼠标箭头距mask遮罩div的距离
+        const maskWidth =  this.$refs.mask.clientWidth
+        left = offsetX - maskWidth/2
+        // 临界点  [0, maskWidth]
+        if(left < 0){
+          left = 0
+        }else if(left > maskWidth){
+          left = maskWidth
+        }
+        top = offsetY - maskWidth/2
+        // 临界点  [0, maskWidth]
+        if(top < 0){
+          top = 0
+        }else if(top > maskWidth){
+          top = maskWidth
+        }
+        // 获取目标元素   设置目标元素的样式
+        // 遮罩
+        const maskDiv = this.$refs.mask
+        maskDiv.style.left = left + "px"
+        maskDiv.style.top = top + "px"
+        // 大图
+        const bigDiv = this.$refs.big
+        bigDiv.style.left = -2 * left + "px"
+        bigDiv.style.top = -2 * top + "px"
+      }
+    }
   }
 </script>
 
 <style lang="less">
   .spec-preview {
     position: relative;
+    width: 400px;
+    height: 400px;
+    border: 1px solid #ccc;
 
     img {
       width: 100%;
-      height: 100%
+      height: 100%;
     }
 
-    .mask {
+    .event {
       width: 100%;
       height: 100%;
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 999;
+      z-index: 998;
     }
 
-    .small {
+    .mask {
       width: 50%;
       height: 50%;
       background-color: rgba(0, 255, 0, 0.3);
@@ -49,10 +90,11 @@
       position: absolute;
       top: -1px;
       left: 100%;
-      border: 1px solid #ccc;
+      border: 1px solid #aaa;
       overflow: hidden;
       z-index: 998;
       display: none;
+      background: white;
 
       img {
         width: 200%;
@@ -64,8 +106,8 @@
       }
     }
 
-    .mask:hover~.small,
-    .mask:hover~.big {
+    .event:hover~.mask,
+    .event:hover~.big {
       display: block;
     }
   }
