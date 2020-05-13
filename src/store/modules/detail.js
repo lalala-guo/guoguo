@@ -1,4 +1,4 @@
-import {reqProduct, reqAddToCart} from '@/api'
+import {reqProduct} from '@/api'
 
 // 创建
 const state={
@@ -24,39 +24,6 @@ const actions={
             commit("productInfo" , detailInfo)
         }
     },
-    // 购物车    分发异步action
-    // async addToCart({commit}, {skuId, skuNum,callback}){ 
-    //     // 异步接收传入的参数数据
-    //     const result = await reqAddToCart(skuId, skuNum)
-    //     if(result.code === 200){
-    //         console.log("成功")
-    //         callback()
-    //     }else{
-    //         console.log("失败")
-    //         callback("失败")
-    //     }
-    // },
-
-    // async addToCart({commit}, {skuId, skuNum,callback}){ 
-    //     // 异步接收传入的参数数据
-    //     const result = await reqAddToCart(skuId, skuNum)
-    //     if(result.code === 200){
-    //         return ""
-    //     }else{
-    //         return "失败"
-    //     }
-    // },
-
-    async addToCart({commit}, {skuId, skuNum,callback}){ 
-        // 异步接收传入的参数数据
-        const result = await reqAddToCart(skuId, skuNum)
-        if(result.code === 200){
-            return ""
-        }else{
-            throw new Error("失败")
-        }
-    }
-
 
 }
 

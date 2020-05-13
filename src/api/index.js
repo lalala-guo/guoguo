@@ -51,3 +51,13 @@ export const reqProduct = (skuId) => ajax(`/item/${skuId}`)  //skuId 要和route
 
 // 购物车  post请求   /api/cart/addToCart/{ skuID }/{ skuNum }
 export const reqAddToCart = (skuId, skuNum) => ajax.post(`/cart/addToCart/${skuId}/${skuNum}`)
+
+// 获取购物车列表    /api/cart/cartList   GET
+export const reqCartList = () => ajax('cart/cartList')
+
+// 切换商品选中状态    /api/cart/checkCart/{skuID}/{isChecked}  GET 
+// isChecked   0: 取消选中状态   1: 选中  
+export const reqCheckCartItem = (skuId, isChecked) => ajax(`/cart/checkCart/${skuId}/${isChecked}`)
+
+// 删除购物车商品   /api/cart/deleteCart/{skuId}    DELETE
+export const reqDeleteItem = (skuId) => ajax.delete(`/cart/deleteCart/${skuId}`)

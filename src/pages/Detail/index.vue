@@ -428,12 +428,29 @@
           //   alert("添加成功")
           // }
         // 通过try catch 捕获错误
-        try{
+        // try{
+        //    await this.$store.dispatch("addToCart",{skuId, skuNum})
+        //    alert("添加成功")
+        // }catch(error){
+        //   alert(error.message)
+        // }
+
+         try{
            await this.$store.dispatch("addToCart",{skuId, skuNum})
-           alert("添加成功")
+          //  alert("添加成功")
+          // 向window中保存sessionStorage
+          window.sessionStorage.setItem("SKU_INFO_KEY", JSON.stringify(this.skuInfo))
+          // window.localStorage.setItem("SKU_INFO_KEY", JSON.stringify(this.skuInfo))
+
+          // 跳转到成功的页面
+          this.$router.push({
+            path:"/addcartsuccess",
+            query:{skuNum}  //{skuNum:skuNum}
+          })
         }catch(error){
           alert(error.message)
         }
+        
       },
       
       callback(errorMsg){

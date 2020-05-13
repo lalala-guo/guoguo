@@ -3,7 +3,8 @@ import Login from "../pages/Login/Login.vue";
 import Reginster from "../pages/Reginster/Reginster.vue";
 import Search from "../pages/Search/Search.vue";
 import Detail from "../pages/Detail/index.vue"
-
+import AddCartSuccess from "../pages/AddCartSuccess/index.vue"
+import ShopCart from "../pages/ShopCart"
 export default [
     {
         path:"/",
@@ -19,6 +20,14 @@ export default [
         name:"detail",
         path:"/detail/:skuId",
         component:Detail,
+    },
+    {
+        path:"/addcartsuccess",
+        component:AddCartSuccess,
+    },
+    {
+        path:"/shopcart",
+        component:ShopCart,
     },
     {
         path:"/reginster",
