@@ -13,17 +13,6 @@ import ajaxMock from "./ajaxMock"
     // 对象形式
     // return ajax.get('/product/getBaseCategoryList')
  }
-//  请求登录   /api/user/passport/login    POST
-
-export function reqLogin(mobile,password){
-    return ajax({
-        method:'POST',
-        url:'/user/passport/login',
-        data:{mobile,password}      //传参要用data对象
-    })
-    // 可用对象形式  
-    // return ajax.post('/user/passport/login', {mobile,password})
-}
 
 export const reqBanners = () => ajaxMock("/banners")
 export const reqFloors = () => ajaxMock("/floors")
@@ -61,3 +50,21 @@ export const reqCheckCartItem = (skuId, isChecked) => ajax(`/cart/checkCart/${sk
 
 // 删除购物车商品   /api/cart/deleteCart/{skuId}    DELETE
 export const reqDeleteItem = (skuId) => ajax.delete(`/cart/deleteCart/${skuId}`)
+
+//  请求登录   /api/user/passport/login    POST
+
+export function reqLogin(mobile,password){
+    return ajax({
+        method:'POST',
+        url:'/user/passport/login',
+        data:{mobile,password}      //传参要用data对象
+    })
+    // 可用对象形式  
+    // return ajax.post('/user/passport/login', {mobile,password})
+}
+
+// 注册   /api/user/passport/register   POST
+export const reqReginster = (userInfo) => ajax.post('/user/passport/register', userInfo)
+
+// 退出登录   /api/user/passport/logout 
+export const reqLoginout = () => ajax('/user/passport/logout')

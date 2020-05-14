@@ -29,7 +29,7 @@
             
             <!-- 变化的数值 = 输入的值 - 原本的值   -->
             <input autocomplete="off" type="text" class="itxt" :value="item.skuNum"
-              @change="changeItemNum(item, $event.target.value-item.skuNum)"
+              @change="changeItemNum(item, $event.target.value-item.skuNum,$event)"
             >
             <a href="javascript:void(0)" class="plus" @click="changeItemNum(item, 1)">+</a>
           </li>
@@ -37,7 +37,7 @@
             <span class="sum">{{item.cartPrice * item.skuNum }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a href="javascrpt:" class="sindelet" @click="deleteCartItem(item.skuId)">删除</a>
             <br>
             <a href="#none">移到收藏</a>
           </li>
@@ -46,12 +46,13 @@
       </div>
     </div>
     <div class="cart-tool">
-      <div class="select-all">
+      <div class="select-all" :disabled="cartList.length===0">
         <input class="chooseAll" type="checkbox" v-model="isAllChecked">
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <!-- <a href="#none" v-for="item in cartList" :key="item.id" @click="deleteCartItem(item.skuId)">删除选中的商品</a> -->
+        <a href="javascrpt:"  @click="deleteCartItems">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -76,7 +77,8 @@ import {mapState, mapGetters} from "vuex"
     name: 'ShopCart',
     computed:{
       ...mapState({
-        cartList: state => state.shopCart.cartList
+        cartList: state => state.shopCart.cartList,
+        // computed: state => state.shopCart.computed
       }),
       ...mapGetters(['totalCount', 'totalPrice']),
       // 不用mapState的写法
@@ -91,7 +93,10 @@ import {mapState, mapGetters} from "vuex"
             // return this.cartList.find(item => item.isChecked!==1)===undefined
             // return this.cartList.filter(item => item.isChecked===1).length===this.cartList.length
             // return !this.cartList.some(item => item.isChecked!==1)
-            return this.cartList.every(item => item.isChecked===1)
+            // return this.cartList.every(item => item.isChecked===1)
+            if(this.cartList.length !== 0){
+               return this.cartList.every(item => item.isChecked===1)
+            }
         },
         // 监视当前勾选状态的改变  利用异步action
         async set(value){
@@ -104,20 +109,68 @@ import {mapState, mapGetters} from "vuex"
             alert(error.message)
           }
         }
-      }
+      },
+      //  deleteCartItem:{
+      //    get(){
+      //     //  return this.cartList.length === 0
+      //    },
+      //    async set(value){
+      //       try{
+      //         await this.$store.dispatch('deletAllCartItem', value.skuId)
+      //         this.$store.dispatch('getCartList')
+      //         // if(this.cartList.length === 0){
+      //         //   this.$store.dispatch("checkAllCartItems", 0)
+      //         // }
+      //       }catch(error){
+      //         alert(error.message)
+      //       }
+      //    }
+      // },
     },
     mounted(){
       this.$store.dispatch("getCartList")
     },
     methods:{
-      async changeItemNum(item, numChange){
-        try{
-          const result = await this.$store.dispatch('addToCart',{skuId: item.skuId, skuNum: numChange})
-          //成功再次请求数据
-          this.$store.dispatch('getCartList')
-        }catch(error){
-          alert(error.message)
+      async deleteCartItem(skuId){
+          if(window.confirm("你确定要删除此商品吗?")){
+            try{
+              await this.$store.dispatch('deletCartItem', skuId)
+              this.$store.dispatch('getCartList')
+              // if(this.cartList.length === 0){
+              //   this.$store.dispatch("checkAllCartItems", 0)
+              // }
+            }catch(error){
+              alert(error.message)
+            }
+          }
+      },
+      async deleteCartItems(){
+        if(window.confirm("你确定要删除选中的商品吗?")){
+            try{
+              await this.$store.dispatch('deletAllCartItem', this.cartList.skuId)
+              this.$store.dispatch('getCartList')
+              // if(this.cartList.length === 0){
+              //   computed.ischecked = false
+              // }
+            }catch(error){
+              alert(error.message)
+            }
         }
+      },
+      async changeItemNum(item, numChange, event){
+          if(item.skuNum + numChange > 0){
+            try{
+              const result = await this.$store.dispatch('addToCart',{skuId: item.skuId, skuNum: numChange})
+              //成功再次请求数据
+              this.$store.dispatch('getCartList')
+            }catch(error){
+              alert(error.message)
+            }
+          }else{
+            if(event){
+              event.target.value = item.skuNum
+            }
+          }
       },
       async checkCartItem(item){
         // 获取需要的数据

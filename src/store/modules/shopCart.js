@@ -2,7 +2,7 @@
 管理购物车vuex模块 
  */
 
-import {reqCartList, reqCheckCartItem, reqAddToCart} from '@/api'
+import {reqCartList, reqCheckCartItem, reqAddToCart, reqDeleteItem} from '@/api'
 
 export default  {
     state: {
@@ -12,10 +12,15 @@ export default  {
     mutations: {
         RECIVE_CART_LIST(state,{cartList}){
             state.cartList = cartList
-        }
+        },
+        // DELETE_CART_LIAT(state, skuId){
+        //     state.skuId = skuId
+        // }
     },
 
     actions: {
+        
+        // 添加购物车列表的异步action
         async  getCartList({commit}){
             const result = await reqCartList()
                 if(result.code===200){
@@ -23,8 +28,8 @@ export default  {
                     commit("RECIVE_CART_LIST",{cartList})
                 }
         },
+
         // 单个勾选状态的异步action
-        
         async checkCartItem({commit}, {skuId,isChecked}){
 
             const result = await reqCheckCartItem(skuId,isChecked)
@@ -59,8 +64,41 @@ export default  {
             // 利用Promise.all()来实现对多个异步操作的promise的管理
             return Promise.all(promises)
         },
+        // 删除购物车列表的异步action
+        async deletCartItem({commit,state}, skuId){
+            const result = await reqDeleteItem(skuId)
+            if(result.code!==200){
+                // const skuId = result.data.skuId
+                // commit('DELETE_CART_LIAT', skuId)
+                throw new Error(result.message || '删除失败')
+            }
+        },
+        async deletAllCartItem({commit,state,dispatch,getters}, skuId){
+            // const result = await reqDeleteItem(skuId)
+            // if(result.code!==200){
+            //     // const skuId = result.data.skuId
+            //     // commit('DELETE_CART_LIAT', skuId)
+            //     throw new Error(result.message || '删除失败')
+            // }
+            const promises = []
+            // 遍历cartList, 看是否都选中了
+            state.cartList.forEach(item => {
+                // 判断 如果当前选项处于选中状态或是为选中状态,也就是说大年状态和传入的状态一致,就return  即不发送请求改变状态
+                // if(item.ischecked === isChecked) return
+                // 分发单个选中的状态
+                const promise = dispatch('deletCartItem', item.skuId)
+                // 将每个异步action的promise添加到promises数组中
+                promises.push(promise)
+            })
 
-        // 购物车    分发异步action
+            // 利用Promise.all()来实现对多个异步操作的promise的管理
+            return Promise.all(promises)
+
+
+
+        },
+        // 购物车添加功能    分发异步action
+        
         // async addToCart({commit}, {skuId, skuNum,callback}){ 
         //     // 异步接收传入的参数数据
         //     const result = await reqAddToCart(skuId, skuNum)

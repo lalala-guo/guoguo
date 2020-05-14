@@ -1,166 +1,185 @@
 <template>
-  <header class="header">
-            <!-- 头部的第一行 -->
-            <div class="top">
-                <div class="container">
-                    <div class="loginList">
-                        <p>尚品汇欢迎您！</p>
-                        <p>
-                            <span>请</span>
-                            <router-link to="/login">登录</router-link>
-                            <router-link to="/reginster" class="register">免费注册</router-link>
-                        </p>
-                    </div>
-                    <div class="typeList">
-                        <a href="###">我的订单</a>
-                        <a href="###" @click="$router.push('/shopcart')">我的购物车</a>
-                        <a href="###">我的尚品汇</a>
-                        <a href="###">尚品汇会员</a>
-                        <a href="###">企业采购</a>
-                        <a href="###">关注尚品汇</a>
-                        <a href="###">合作招商</a>
-                        <a href="###">商家后台</a>
-                    </div>
+    <header class="header">
+        <!-- 头部的第一行 -->
+        <div class="top">
+            <div class="container">
+                <div class="loginList">
+                    <p>尚品汇欢迎您！</p>
+                    <p v-if="userInfo.name">
+                        <span>{{userInfo.name}}</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="javascript:;" @click='loginOut'>退出登录</a>
+                        <!-- <router-link to="/login">退出登录</router-link> -->
+                    </p>
+                    <p v-else>
+                        <span>请</span>
+                        <router-link to="/login">登录</router-link>
+                        <router-link to="/reginster" class="register">免费注册</router-link>
+                    </p>
+                </div>
+                <div class="typeList">
+                    <a href="###">我的订单</a>
+                    <a href="JavaScript:;" @click="$router.push('/shopcart')">我的购物车</a>
+                    <a href="###">我的尚品汇</a>
+                    <a href="###">尚品汇会员</a>
+                    <a href="###">企业采购</a>
+                    <a href="###">关注尚品汇</a>
+                    <a href="###">合作招商</a>
+                    <a href="###">商家后台</a>
                 </div>
             </div>
-            <!--头部第二行 搜索区域-->
-            <div class="bottom">
-                <h1 class="logoArea">
-                  <router-link to="/" class="logo" title="尚品汇" >
+        </div>
+        <!--头部第二行 搜索区域-->
+        <div class="bottom">
+            <h1 class="logoArea">
+                <router-link to="/" class="logo" title="尚品汇">
                     <img src="./images/logo.png" alt="">
-                  </router-link>
-                </h1>
-                <div class="searchArea">
-                    <form action="###" class="searchForm">
-                        <input type="text" id="autocomplete" class="input-error input-xxlarge" 
-                         placeholder="输入关键字" v-model="keyword" />
-                        <button class="sui-btn btn-xlarge btn-danger" @click.prevent="search">搜索</button>
-                    </form>
-                </div>
+                </router-link>
+            </h1>
+            <div class="searchArea">
+                <form action="###" class="searchForm">
+                    <input type="text" id="autocomplete" class="input-error input-xxlarge" placeholder="输入关键字"
+                        v-model="keyword" />
+                    <button class="sui-btn btn-xlarge btn-danger" @click.prevent="search">搜索</button>
+                </form>
             </div>
-        </header>
+        </div>
+    </header>
 </template>
 
 <script>
-export default {
-    data(){
-      return {
-        keyword:""
-      }
-    },
-    name:"Header",
-    mounted () {
-      // 在Header, 通过事件总线对象绑定事件监听来接收消息, 从而可以更新数据
-    //   console.log(this.$globalEventBus)
-      this.$globalEventBus.$on('removeKeyword', () => {
-        this.keyword = ''
-      })
-    },
-    methods:{
-      search(){
-        // this.$router.push("/search")
-        // this.$router.push(`/search/${this.keyword}`)  //params 字符串传参方式
-        // // query  字符串传参方式
-        // this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`)
-        // const keyword = this.keyword
-    //  如果是空串  要判断  
-      //  字符串 方式
-        // if(keyword === ""){
-        //   this.$router.push("/search")
-        // }else {
-        //   this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`)
-        // }
-      // 对象方式
-        // this.$router.push({
-        //   name:"search",
-        //   params: { keyword: keyword ==="" ? undefined : keyword },
-        //   query: { keyword2: keyword.toUpperCase() }
-        // })
-
-        /*
-        但是连续点击的时候会报错   从vue-router3.1.0之后 引入了push()的promise的语法  
-        如果没有通过参数指定回调函数就返回一个promise指定成功/失败的回调  且内部会判断如果要跳转的路径和参数都没有变化,
-        会抛出一个失败的promise
-
-        编程式路由跳转到当前路由(参数不变), 会抛出NavigationDuplicated的警告错误
-        router.push(location, onComplete?, onAbort?): 如果直接指定了回调函数, push方法没有返回值
-        router.push(location).then(onComplete).catch(onAbort)
-            如果没有直接指定回调函数, push方法返回值为promise
-            如果指定的是当前路由路径且参数数据不变化, push内部就会抛出一个失败的promise
-        */
-
-      //  解决  1   再添加一个回调函数
-     
-          // const keyword = this.keyword
-          // this.$router.push({
-          //   name:"search",
-          //   params:{keyword:keyword==="" ? undefined : keyword},
-          //   query:{ keyword2: keyword.toUpperCase() }
-          // },() => {})
-      
-     //  解决  2   设置为undefined 再添加一个回调函数
-      /*
-          const keyword = this.keyword
-          this.$router.push({
-            name:"search",
-            params:{keyword:keyword==="" ? undefined : keyword},
-            query:{ keyword2: keyword.toUpperCase() }
-          },undefined,() => {})
-      */
-     //  解决  3   catch处理
-      /*
-          const keyword = this.keyword
-          this.$router.push({
-            name:"search",
-            params:{keyword:keyword==="" ? undefined : keyword},
-            query:{ keyword2: keyword.toUpperCase() }
-          }).catch(() => {})
-      */
-
-  //  修正Vue原型上的push和replace方法
-     //  解决  4   replace
-      /*
-          const keyword = this.keyword
-          this.$router.replace({      
-          name: 'search', 
-          params: { keyword: keyword==='' ? undefined : keyword },
-          query: { keyword2: keyword.toUpperCase() }
-        }) 
-      */
-     //  解决  5   push
-      /*
-          const keyword = this.keyword
-          */
-
-            const keyword = this.keyword
-            const location = { 
-                name: 'search', 
-                // params: { keyword: keyword==='' ? undefined : keyword },
+    // import loginOutGet from '@/utiles'
+    import { mapState } from 'vuex'
+    export default {
+        name: "Header",
+        data() {
+            return {
+                keyword: ""
             }
-            // 对象的解构赋值
-            if(keyword){
-                location.params = {keyword}
-            }
-            const { query } = this.$route
+        },
+        computed: {
+            ...mapState({
+                userInfo: state => state.user.userInfo
+            })
+        },
 
-            location.query = query
+        mounted() {
+            // 在Header, 通过事件总线对象绑定事件监听来接收消息, 从而可以更新数据
+            //   console.log(this.$globalEventBus)
+            this.$globalEventBus.$on('removeKeyword', () => {
+                this.keyword = ''
+            })
+        },
+        methods: {
+            loginOut() {
+                // this.userInfo.name = ''
+                this.$store.dispatch('Loginout')
+                
+                // loginOutGet()
+                this.$router.replace('/')
+            },
+            search() {
+                // this.$router.push("/search")
+                // this.$router.push(`/search/${this.keyword}`)  //params 字符串传参方式
+                // // query  字符串传参方式
+                // this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`)
+                // const keyword = this.keyword
+                //  如果是空串  要判断  
+                //  字符串 方式
+                // if(keyword === ""){
+                //   this.$router.push("/search")
+                // }else {
+                //   this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`)
+                // }
+                // 对象方式
+                // this.$router.push({
+                //   name:"search",
+                //   params: { keyword: keyword ==="" ? undefined : keyword },
+                //   query: { keyword2: keyword.toUpperCase() }
+                // })
 
-            // 判断当前是不是search界面  不是就跳转  是就用replace  更新
-            // if(this.$route.path.indexOf("/search") === 0){
-            if(this.$route.name === "/search"){
-                this.$router.replace(location)
-            }else{
-                this.$router.push(location)
+                /*
+                但是连续点击的时候会报错   从vue-router3.1.0之后 引入了push()的promise的语法  
+                如果没有通过参数指定回调函数就返回一个promise指定成功/失败的回调  且内部会判断如果要跳转的路径和参数都没有变化,
+                会抛出一个失败的promise
+
+                编程式路由跳转到当前路由(参数不变), 会抛出NavigationDuplicated的警告错误
+                router.push(location, onComplete?, onAbort?): 如果直接指定了回调函数, push方法没有返回值
+                router.push(location).then(onComplete).catch(onAbort)
+                    如果没有直接指定回调函数, push方法返回值为promise
+                    如果指定的是当前路由路径且参数数据不变化, push内部就会抛出一个失败的promise
+                */
+
+                //  解决  1   再添加一个回调函数
+
+                // const keyword = this.keyword
+                // this.$router.push({
+                //   name:"search",
+                //   params:{keyword:keyword==="" ? undefined : keyword},
+                //   query:{ keyword2: keyword.toUpperCase() }
+                // },() => {})
+
+                //  解决  2   设置为undefined 再添加一个回调函数
+                /*
+                    const keyword = this.keyword
+                    this.$router.push({
+                      name:"search",
+                      params:{keyword:keyword==="" ? undefined : keyword},
+                      query:{ keyword2: keyword.toUpperCase() }
+                    },undefined,() => {})
+                */
+                //  解决  3   catch处理
+                /*
+                    const keyword = this.keyword
+                    this.$router.push({
+                      name:"search",
+                      params:{keyword:keyword==="" ? undefined : keyword},
+                      query:{ keyword2: keyword.toUpperCase() }
+                    }).catch(() => {})
+                */
+
+                //  修正Vue原型上的push和replace方法
+                //  解决  4   replace
+                /*
+                    const keyword = this.keyword
+                    this.$router.replace({      
+                    name: 'search', 
+                    params: { keyword: keyword==='' ? undefined : keyword },
+                    query: { keyword2: keyword.toUpperCase() }
+                  }) 
+                */
+                //  解决  5   push
+                /*
+                    const keyword = this.keyword
+                    */
+
+                const keyword = this.keyword
+                const location = {
+                    name: 'search',
+                    // params: { keyword: keyword==='' ? undefined : keyword },
+                }
+                // 对象的解构赋值
+                if (keyword) {
+                    location.params = { keyword }
+                }
+                const { query } = this.$route
+                location.query = query
+                // 判断当前是不是search界面  不是就跳转  是就用replace  更新
+                // if(this.$route.path.indexOf("/search") === 0){
+                if (this.$route.name === "/search") {
+                    this.$router.replace(location)
+                } else {
+                    this.$router.push(location)
+                }
+
+
             }
-            
-      
+        }
     }
-  }
-}
 </script>
 
 <style lang="less" scoped>
-  .header {
+    .header {
         &>.top {
             background-color: #eaeaea;
             height: 30px;

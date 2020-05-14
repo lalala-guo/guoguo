@@ -19,3 +19,17 @@ export function getUserTemp(){
     }
     return userTempid
 }
+// 保存在本地
+export function localSet(userInfo){
+    localStorage.setItem('SET_LOCAL',JSON.stringify(userInfo))
+}
+export function localGet(){
+    return JSON.parse(localStorage.getItem('SET_LOCAL')) || {}
+}
+// 退出登录  本地缓存
+export function loginOutSet(userInfo){
+    localStorage.setItem('LOGIN_OUT',JSON.stringify(userInfo))
+}
+export function loginOutGet(){
+    return JSON.parse(localStorage.getItem('LOGIN_OUT'))
+}
