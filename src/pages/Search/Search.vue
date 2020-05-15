@@ -35,7 +35,7 @@
           </ul>
         </div>
         <!--selector-->
-        <SearchSelector :setTrademark="setTrademark" :addProp="addProp"/>
+        <SearchSelector :setTrademark="setTrademark" :addProp="addProp" />
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
@@ -55,7 +55,7 @@
                 <li>
                   <a href="#">评价</a>
                 </li>
-                <li  :class="{active: isActive('2')}" @click="setOrder('2')">
+                <li :class="{active: isActive('2')}" @click="setOrder('2')">
                   <a href="javascript:;">价格
                     <i class="iconfont" :class="orderIcon" v-if="isActive('2')"></i>
                   </a>
@@ -68,7 +68,7 @@
               <li class="yui3-u-1-5" v-for="goods in productList.goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <router-link :to="`/detail/${goods.id}`" >
+                    <router-link :to="`/detail/${goods.id}`">
                       <img :src="goods.defaultImg" />
                     </router-link>
                   </div>
@@ -79,26 +79,24 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <router-link :to="`/detail/${goods.id}`" >{{goods.title}}</router-link>
+                    <router-link :to="`/detail/${goods.id}`">{{goods.title}}</router-link>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
                   </div>
                   <div class="operate">
-                    <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
+                    <a href="javascript:;" class="sui-btn btn-bordered btn-danger" 
+                    @click="addToCart(goods)">
+                      加入购物车
+                    </a>
                     <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
                   </div>
                 </div>
               </li>
             </ul>
           </div>
-          <Pagination 
-          :currentPage="options.pageNo"
-          :pageSize="options.pageSize"
-          :total="productList.total"
-          :showPageNo="3"
-          @currentChange="handlCurrentChange"
-          />
+          <Pagination :currentPage="options.pageNo" :pageSize="options.pageSize" :total="productList.total"
+            :showPageNo="3" @currentChange="handlCurrentChange" />
         </div>
       </div>
     </div>
@@ -106,13 +104,15 @@
 </template>
 
 <script>
-// 引入mapState
-import {mapState} from "vuex"
-import SearchSelector from "./SearchSelector/SearchSelector.vue"
+  // 引入mapState
+  import {
+    mapState
+  } from "vuex"
+  import SearchSelector from "./SearchSelector/SearchSelector.vue"
   export default {
     name: "Search",
     // props:['keyword3','keyword4']
-    data () {
+    data() {
       return {
         // 包含所有用于搜索请求的参数数据的对象
         options: {
@@ -130,30 +130,30 @@ import SearchSelector from "./SearchSelector/SearchSelector.vue"
       }
     },
 
-    computed:{
+    computed: {
       ...mapState({
         productList: state => state.search.productList
       }),
-      orderIcon () {
-        return this.options.order.split(':')[1]==='desc' ? 'icondown' : 'iconup'
+      orderIcon() {
+        return this.options.order.split(':')[1] === 'desc' ? 'icondown' : 'iconup'
       }
     },
     watch: {
       /* 
       当路由跳转时只有路由参数发生了变化
       */
-      $route () {
+      $route() {
         this.updateOptions()
         // 请求获取数据
         this.$store.dispatch('getProductList', this.options)
       }
     },
 
-    beforeMount () {
+    beforeMount() {
       this.updateOptions()
     },
-    
-    mounted(){
+
+    mounted() {
       // const options = this.options
       // dispatch 分发 数据    需要传入参数
       // this.$store.dispatch("getProductList",this.options)
@@ -161,30 +161,58 @@ import SearchSelector from "./SearchSelector/SearchSelector.vue"
     },
 
 
-    methods:{
-      getProductList(pageNo=1){
+    methods: {
+      async addToCart(goods) {
+        // 获取数据
+        const skuId = goods.id
+        const skuNum = this.productList.pageNo
+        console.log(skuId,skuNum)
+        try {
+          await this.$store.dispatch("addToCart", {skuId, skuNum})
+          //  alert("添加成功")
+          // 向window中保存sessionStorage
+          const skuInfo = {
+            skuDefaultImg: goods.defaultImg,
+            skuName: goods.title,
+            id: goods.id,
+          }
+          window.sessionStorage.setItem("SKU_INFO_KEY", JSON.stringify(skuInfo))
+          // window.localStorage.setItem("SKU_INFO_KEY", JSON.stringify(skuInfo))
+
+          // 跳转到成功的页面
+          this.$router.push({
+            path: "/addcartsuccess",
+            query: {
+              skuNum
+            } //{skuNum:skuNum}
+          })
+        } catch (error) {
+          alert(error.message)
+        }
+      },
+      getProductList(pageNo = 1) {
         // 更新options中的pageNo
         this.options.pageNo = pageNo
         // 再dispatch请求获取
-        this.$store.dispatch("getProductList",this.options)
+        this.$store.dispatch("getProductList", this.options)
       },
 
-      handlCurrentChange(currentPage){
+      handlCurrentChange(currentPage) {
         // 更新options中的currentPage
         this.options.pageNo = currentPage
         // 重新获取数据
-        this.$store.dispatch("getProductList",this.options)
+        this.$store.dispatch("getProductList", this.options)
       },
 
-      isActive(orderFlag){
+      isActive(orderFlag) {
         return this.options.order.indexOf(orderFlag) === 0
       },
-      setOrder (flag) { 
+      setOrder(flag) {
         // 得到原本的orderFlag和orderType
         let [orderFlag, orderType] = this.options.order.split(':')
         // 点击当前排序项: 切换排序方式
-        if (flag===orderFlag) {
-          orderType = orderType==='desc' ? 'asc' : 'desc'
+        if (flag === orderFlag) {
+          orderType = orderType === 'desc' ? 'asc' : 'desc'
         } else { // 点击不是当前排序项: 切换排序项, 排序方式为降序
           orderFlag = flag
           orderType = 'desc'
@@ -194,19 +222,19 @@ import SearchSelector from "./SearchSelector/SearchSelector.vue"
         // 重新请求显示
         this.getProductList()
       },
-      
-      removeProp(index){
+
+      removeProp(index) {
         this.options.props.splice(index, 1)
         this.getProductList()
       },
-      addProp(attrId, item, attrName){
+      addProp(attrId, item, attrName) {
         const prop = `${attrId}:${item}:${attrName}`
         this.options.props.push(prop)
-      // 重新请求数据显示
+        // 重新请求数据显示
         this.getProductList()
-},
+      },
       // 设置新的搜索品牌(添加搜索)
-      setTrademark(trademark){
+      setTrademark(trademark) {
         // // 新增数据的显示与删除
         // // 判断options内部是否有trademark属性
         //   if(!this.options.hasOwnProperty("trademark")){
@@ -222,7 +250,7 @@ import SearchSelector from "./SearchSelector/SearchSelector.vue"
         this.getProductList()
       },
       // 删除 移出品牌搜索
-      removeTrademark(){
+      removeTrademark() {
         // 删除数据时,不能直接写delete删除
         this.$delete(this.options, "trademark")
         // 数据重置
@@ -230,35 +258,45 @@ import SearchSelector from "./SearchSelector/SearchSelector.vue"
         // 请求数据
         this.getProductList()
       },
-      
-      // 移除搜索列表
-      removeCategory(){
-        
-          this.options.category1Id = ''
-          this.options.category2Id = ''
-          this.options.category3Id = '' 
-          this.options.categoryName = ''
 
-          // 重新获取数据
+      // 移除搜索列表
+      removeCategory() {
+
+        this.options.category1Id = ''
+        this.options.category2Id = ''
+        this.options.category3Id = ''
+        this.options.categoryName = ''
+
+        // 重新获取数据
         // this.$store.dispatch('getProductList', this.options) // 不可以
         // 重新跳转到当前路由, 不再携带query参数, 只携带原本的params参数
-        this.$router.replace(this.$route.path)  // $route.path不带query参数, 但带params参数(如果有)
+        this.$router.replace(this.$route.path) // $route.path不带query参数, 但带params参数(如果有)
       },
       // 移除关键字的搜索条件
-      removeKeyword(){
+      removeKeyword() {
         // 重置keyword
         this.options.keyword = ""
         // 重新跳转到当前路由, 不再携带params参数, 只携带原本的query参数
-        this.$router.replace({name: 'search', query: this.$route.query})  
+        this.$router.replace({
+          name: 'search',
+          query: this.$route.query
+        })
         // 通知Header组件也删除输入的关键字
         // 在Search, 通过事件总线对象来分发事件
         this.$globalEventBus.$emit('removeKeyword')
       },
 
-      updateOptions(){
+      updateOptions() {
         // 对象的解构赋值  通过params和query更新options
-        const {categoryName, category1Id, category2Id, category3Id} = this.$route.query
-        const {keyword} = this.$route.params
+        const {
+          categoryName,
+          category1Id,
+          category2Id,
+          category3Id
+        } = this.$route.query
+        const {
+          keyword
+        } = this.$route.params
         this.options = {
           ...this.options,
           categoryName,

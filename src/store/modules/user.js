@@ -1,7 +1,7 @@
 // 登录数据
 import {reqLogin, reqReginster, reqLoginout} from '@/api'
 //引入
-import {getUserTemp, localSet, localGet,loginOut} from "@/utiles";
+import {getUserTemp, localSet, localGet, remove} from "@/utiles";
 
 // window.onbeforeunload = function (e) {
 //     login()                // 清除
@@ -17,8 +17,8 @@ export default {
         RECEIVE_USER_INFO(state,userInfo){
             state.userInfo = userInfo
         },
-        LOGIN_OUT(state, userInfor){
-            state.userInfo = userInfor
+        LOGIN_OUT(state){
+            state.userInfo = {}
         }
     },
     // 创建异步action
@@ -45,7 +45,9 @@ export default {
         async Loginout({commit}){
             const result = await reqLoginout()
             if(result.code===200){
-                commit('LOGIN_OUT','')
+                // 清除vuex中的用户信息  localStorage中的用户信息
+                commit('LOGIN_OUT')
+                remove()
                 // loginOut('')
             }else{
                 throw new Error(result.message || '退出失败')

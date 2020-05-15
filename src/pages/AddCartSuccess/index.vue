@@ -34,6 +34,21 @@
       // 读取  获取sessionStorage中的数据并由json字符串转换为对象
       this.skuInfo = JSON.parse(window.sessionStorage.getItem("SKU_INFO_KEY"))
       // this.skuInfo = JSON.parse(window.localStorage.getItem("SKU_INFO_KEY"))
+    },
+
+// 只有携带的skuNum以及sessionStorage中有skuInfo数据, 才能查看添加购物车成功的界面
+    beforeRouteEnter(to, from, next){
+      next((vm) => {
+        // 获取skuNum  skuInfo
+        const skuNum = vm.$route.query.skuNum
+        const skuInfo = JSON.parse(window.sessionStorage.getItem("SKU_INFO_KEY"))
+        // 判断  如果skuNum且skuInfo有值才放行
+        if(skuNum && skuInfo){
+          next()
+        }else{
+          next('/')
+        }
+      })
     }
   }
 </script>

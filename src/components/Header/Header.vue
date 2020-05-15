@@ -18,7 +18,7 @@
                     </p>
                 </div>
                 <div class="typeList">
-                    <a href="###">我的订单</a>
+                    <a href="JavaScript:;" @click="$router.push('/center/myorder')">我的订单</a>
                     <a href="JavaScript:;" @click="$router.push('/shopcart')">我的购物车</a>
                     <a href="###">我的尚品汇</a>
                     <a href="###">尚品汇会员</a>
@@ -72,9 +72,11 @@
         },
         methods: {
             loginOut() {
-                // this.userInfo.name = ''
-                this.$store.dispatch('Loginout')
-                
+                if(window.confirm('你确定要退出吗')){
+                    // this.userInfo.name = ''
+                    this.$store.dispatch('Loginout')
+                }
+
                 // loginOutGet()
                 this.$router.replace('/')
             },
@@ -171,8 +173,6 @@
                 } else {
                     this.$router.push(location)
                 }
-
-
             }
         }
     }

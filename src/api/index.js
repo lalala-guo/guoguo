@@ -38,7 +38,7 @@ export const reqProductList = (searchParams) => ajax({
 //  GET请求  地址:/api/item/{ skuId }
 export const reqProduct = (skuId) => ajax(`/item/${skuId}`)  //skuId 要和routes里面的占位符一样
 
-// 购物车  post请求   /api/cart/addToCart/{ skuID }/{ skuNum }
+// 加入购物车  post请求   /api/cart/addToCart/{ skuID }/{ skuNum }
 export const reqAddToCart = (skuId, skuNum) => ajax.post(`/cart/addToCart/${skuId}/${skuNum}`)
 
 // 获取购物车列表    /api/cart/cartList   GET
@@ -68,3 +68,6 @@ export const reqReginster = (userInfo) => ajax.post('/user/passport/register', u
 
 // 退出登录   /api/user/passport/logout 
 export const reqLoginout = () => ajax('/user/passport/logout')
+
+// 获取我的订单     /api/order/auth/{page}/{limit}      GET
+export const reqMyOrder = (page, limit) => ajax(`/order/auth/${page}/${limit}`)

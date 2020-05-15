@@ -12,26 +12,40 @@
               <a href="##" class="current">账户登录</a>
             </li>
           </ul>
-
           <div class="content">
-            <form action="##">
-              <div class="input-text clearFix">
-                <span></span>
-                <input type="text" placeholder="邮箱/用户名/手机号" v-model="mobile">
-              </div>
-              <div class="input-text clearFix">
-                <span class="pwd"></span>
-                <input type="text" placeholder="请输入密码" v-model="password">
-              </div>
-              <div class="setting clearFix">
-                <label class="checkbox inline">
-                  <input name="m1" type="checkbox" >
-                  自动登录
-                </label>
-                <span class="forget">忘记密码？</span>
-              </div>
-              <button class="btn" @click.prevent='login' >登&nbsp;&nbsp;录</button>
-            </form>
+            <ValidationObserver>
+              <form action="##">
+                <div class="input-text clearFix">
+                  <span></span>
+                  <ValidationProvider name="邮箱/用户名/手机号" :rules="{required: true, regex: /^1\d{10}$/}">
+                    <template slot-scope="{errors, classes}">
+                      <input type="text" placeholder="邮箱/用户名/手机号" v-model="mobile">
+                      <!-- <input type="text" placeholder="请输入你的手机号" v-model="mobile" :class="classes"> -->
+                      <div class="error-msg">{{errors[0]}}</div>
+                    </template>
+                  </ValidationProvider>
+                </div>
+                <div class="input-text clearFix">
+                  <span class="pwd"></span>
+                  <ValidationProvider name="密码" :rules="{required: true, min: 6, max: 10}">
+                    <template slot-scope="{errors, classes}">
+                      <input type="text" placeholder="请输入密码" v-model="password">
+                      <!-- <input type="text" placeholder="邮箱/用户名/手机号" v-model="mobile"> -->
+                      <!-- <input type="text" placeholder="请输入你的手机号" v-model="mobile" :class="classes"> -->
+                      <div class="error-msg">{{errors[0]}}</div>
+                    </template>
+                  </ValidationProvider>
+                </div>
+                <div class="setting clearFix">
+                  <label class="checkbox inline">
+                    <input name="m1" type="checkbox">
+                    自动登录
+                  </label>
+                  <span class="forget">忘记密码？</span>
+                </div>
+                <button class="btn" @click.prevent='login'>登&nbsp;&nbsp;录</button>
+              </form>
+            </ValidationObserver>
 
             <div class="call clearFix">
               <ul>
@@ -68,28 +82,67 @@
 <script>
   export default {
     name: 'Login',
-    data(){
+    data() {
       return {
-        mobile:'',
-        password:''
+        mobile: '',
+        password: ''
       }
     },
-    methods:{
-      async login(){
-        const {mobile, password} = this
-        try{
-          await this.$store.dispatch('login',{mobile,password})
+    methods: {
+      async login() {
+        const {
+          mobile,
+          password
+        } = this
+        try {
+          await this.$store.dispatch('login', {
+            mobile,
+            password
+          })
           // 登录成功  跳转到首页
-          this.$router.replace('/')
-        }catch(error){
+          // this.$router.replace('/')
+          // 判断登录前是否有目标路径  redirect
+          const redirect = this.$route.query.redirect
+          if (redirect) {
+            this.$router.replace(redirect)
+          } else {
+            this.$router.replace('/')
+          }
+
+        } catch (error) {
           alert(error.message)
         }
       }
+    },
+    // 组件路由守卫
+    // TypeError: Cannot read property '$store' of undefined
+    // 在组件守卫中,不能使用this  因为此时this还未创建,还不是实例对象  还是undefined
+    // beforeRouteEnter(to, from, next) {
+    //   if(!this.$store.state.user.userInfo.name){
+    //     next()
+    //   }else{
+    //     next('/')
+    //   }
+    // }
+    // 可以使用 next((vm) => {})
+    beforeRouteEnter(to, from, next) {
+      next((vm) => {
+        if (!vm.$store.state.user.userInfo.name) {
+          next()
+        } else {
+          next('/')
+        }
+      })
     }
   }
 </script>
 
 <style lang="less" scoped>
+  .error-msg {
+    width: 200px;
+    color: red;
+  }
+
   .login-container {
     .login-wrap {
       height: 487px;
@@ -155,7 +208,7 @@
             line-height: 18px;
 
             .input-text {
-              margin-bottom: 16px;
+              margin-bottom: 20px;
 
               span {
                 float: left;
@@ -165,6 +218,7 @@
                 background: url(../../assets/images/icons.png) no-repeat -10px -201px;
                 box-sizing: border-box;
                 border-radius: 2px 0 0 2px;
+
               }
 
               .pwd {

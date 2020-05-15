@@ -34,6 +34,10 @@ instance.interceptors.request.use(
 
         // 请求头信息   userTempid
         config.headers['userTempid'] = store.state.user.userTempid
+        const token =  store.state.user.userInfo.token
+        if(token){
+            config.headers['token'] = token
+        }
         return config
     }
 )
