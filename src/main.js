@@ -10,7 +10,7 @@ import TypeNav from "./components/TypeNav/TypeNav.vue";
 import Carousel from "./components/Carousel/Carousel.vue";
 import Pagination from './components/Pagination/index.vue'
 import './validate'
-
+import './element'
 // 全局引入接口请求函数
 import * as API from '@/api'
 

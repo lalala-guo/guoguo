@@ -22,7 +22,8 @@
                 <thead>
                     <tr>
                         <th colspan="5">
-                            <span class="ordertitle">{{order.createTime}}　订单编号：{{order.outTradeNo}}
+                            <span class="ordertitle">
+                                {{order.createTime}}　订单编号：{{order.outTradeNo}}
                                 <span class="pull-right delete">
                                     <img src="./images/delete.png">
                                 </span>
@@ -37,12 +38,11 @@
                                 <img :src="item.imgUrl">
                                 <a href="javascript:;" class="block-text">{{item.skuName}}</a>
                                 <span>x{{item.skuNum}}</span>
-                                <a href="javascript:;" class="service">售后申请</a>
                             </div>
                         </td>
                         <!-- 显示第一个订单 -->
                         <template v-if="index===0">
-                            <td :rowspan="order.orderDetailList.length" width="8%" class="center">{{item.skuName}}</td>
+                            <td :rowspan="order.orderDetailList.length" width="8%" class="center">{{order.consignee}}</td>
                             <td :rowspan="order.orderDetailList.length" width="13%" class="center">
                                 <ul class="unstyled">
                                     <li>总金额¥{{order.totalAmount}}</li>
@@ -51,7 +51,7 @@
                                 </ul>
                             </td>
                             <td :rowspan="order.orderDetailList.length" width="8%" class="center">
-                                <a href="javascript:;" class="btn">{{order.orderStatus==='UNPAID'?'已支付':'未支付'}} </a>
+                                <a href="javascript:;" class="btn">{{order.orderStatus==='PAID'?'已支付':'未支付'}} </a>
                             </td>
                             <td :rowspan="order.orderDetailList.length" width="13%" class="center">
                                 <ul class="unstyled">
@@ -73,6 +73,18 @@
         :total="total" 
         :showPageNo="5"
         @currentChange="getMyOrder" />
+        <!-- <el-pagination
+      background
+      prev-text="上一页"
+      next-text="下一页"
+      layout="prev, pager, next, ->, total"
+      :total="total"
+      :page-size="pageSize"  
+      :current-page="currentPage"
+      :pager-count="7"
+      @current-change="getMyOrders"
+    >
+    </el-pagination> -->
     </div>
 </template>
 

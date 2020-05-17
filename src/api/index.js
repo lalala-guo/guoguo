@@ -71,3 +71,21 @@ export const reqLoginout = () => ajax('/user/passport/logout')
 
 // 获取我的订单     /api/order/auth/{page}/{limit}      GET
 export const reqMyOrder = (page, limit) => ajax(`/order/auth/${page}/${limit}`)
+
+// 获取订单交易页信息   /api/order/auth/trade   GET
+export const reqTradeInfo = () => ajax('/order/auth/trade')  //后台通过token知道哪个订单
+
+// 获取订单支付信息     /api/payment/weixin/createNative/{orderId}   GET
+export const reqPayInfo = (orderId) => ajax(`/payment/weixin/createNative/${orderId}`)
+
+// 查询订单支付状态  /api/payment/weixin/queryPayStatus/{orderId}
+export const reqOrderStatus = (orderId) => ajax(`/payment/weixin/queryPayStatus/${orderId}`)
+
+// 提交订单   /api/order/auth/submitOrder?tradeNo={tradeNo}    POST
+export const reqSubmitOrder = (tradeNo,orderInfo) => ajax({
+    url: '/order/auth/submitOrder',
+    method:'POST',
+    params: {tradeNo},      // query 参数  后台用params传递
+    data: orderInfo
+})
+

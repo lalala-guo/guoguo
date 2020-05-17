@@ -1,7 +1,7 @@
-import Home from "../pages/Home/Home.vue";
+// import Home from "../pages/Home/Home.vue";
+// import Search from "../pages/Search/Search.vue";
 import Login from "../pages/Login/Login.vue";
 import Reginster from "../pages/Reginster/Reginster.vue";
-import Search from "../pages/Search/Search.vue";
 import Detail from "../pages/Detail/index.vue"
 import AddCartSuccess from "../pages/AddCartSuccess/index.vue"
 import ShopCart from "../pages/ShopCart"
@@ -17,12 +17,12 @@ import store from "@/store";
 export default [
     {
         path:"/",
-        component:Home
-    },    
+        component:() => import('@/pages/Home/Home.vue')  // 懒加载
+    },
     {
         name:"search",
         path:"/search/:keyword?",
-        component:Search,
+        component:() => import('@/pages/Search/Search.vue'), // 懒加载
         props: route => ({keyword3:route.params.keyword, keyword4:route.query.keyword2})
     },
     {
@@ -54,6 +54,8 @@ export default [
     {
         path:"/pay",
         component:Pay,
+        // 将query参数映射成props传递给路由组件
+        props: route => ({orderId:   route.query.orderId}),
         beforeEnter(to, from, next)  {
             if(from.path === '/trade'){
                 next()
